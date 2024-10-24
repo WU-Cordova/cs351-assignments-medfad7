@@ -48,6 +48,15 @@ class AVLTree(IAVLTree[K,V], Generic[K,V]):
             self.print_tree(node._left, level + 1, "L--- ")
             self.print_tree(node._right, level + 1, "R--- ")
             
+    def is_empty(self) -> bool:
+        return self._root is None
+    
+    def get_max(self) -> AVLNode:
+        current = self._root
+        while current._right is not None:
+            current = current._right
+        return current
+            
     def balance(self, node: AVLNode) -> AVLNode:
         if node.balance_factor > 1:
             if node._left.balance_factor < 0:
@@ -104,6 +113,17 @@ class AVLTree(IAVLTree[K,V], Generic[K,V]):
                 return None
             if key == node.key:
                 return node._value
+            if key < node.key:
+                return _search(node._left, key)
+            return _search(node._right, key)
+        return _search(self._root, key)
+    
+    def search_node(self, key: K) -> AVLNode | None:
+        def _search(node: AVLNode, key: K) -> AVLNode | None:
+            if node is None:
+                return None
+            if key == node.key:
+                return node
             if key < node.key:
                 return _search(node._left, key)
             return _search(node._right, key)
